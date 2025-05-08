@@ -1,4 +1,6 @@
-import { Controller, Get, Patch, Post, Body, Request, UseGuards, Delete } from '@nestjs/common';
+import {
+  Controller, Get, Patch, Post, Body, Request, UseGuards, Delete,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -39,8 +41,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Delete('soft-delete')
   async softDelete(@Request() req) {
-    const userId = req.user._id;
-    await this.userService.softDelete(userId);
+    await this.userService.softDelete(req.user._id);
     return { message: 'User soft-deleted successfully' };
   }
 
@@ -51,5 +52,14 @@ export class UserController {
     return { message: 'Only admin can see this.' };
   }
 
-
+  @UseGuards(JwtAuthGuard)
+  @Post('send-message')
+  async sendMessage(
+    @Request() req,
+    @Body('receiverId') receiverId: string,
+    @Body('content') content: string,
+  ) {
+    const senderId = req.user._id;
+    return this.userService.sendMessage(senderId, receiverId, content);
+  }
 }

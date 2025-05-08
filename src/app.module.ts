@@ -6,9 +6,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { IndexCleanerService } from './utils/index-cleaner.service';
+import { MessagingModule } from './messaging/messaging.module';
 
 @Module({
   imports: [
+    MessagingModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
